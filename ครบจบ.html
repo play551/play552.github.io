@@ -189,5 +189,2474 @@ export interface ToastPayload {
 /* ------------------------------ Theme ----------------------------- */
 
 export type ThemeMode = 'light' | 'dark' | 'system';
-  
-  
+  @tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ================================================================== *
+ *  Design tokens
+ * ================================================================== */
+@layer base {
+  :root {
+    --bg: 248 250 252;
+    --fg: 15 23 42;
+    --muted: 100 116 139;
+    --card: 255 255 255;
+    --border: 226 232 240;
+    --ring: 52 102 255;
+    --glass-bg: 255 255 255;
+    --glass-alpha: 0.62;
+    --glass-border: 255 255 255;
+    --glass-border-alpha: 0.55;
+    --shadow-color: 15 23 42;
+  }
+
+  .dark {
+    --bg: 8 11 22;
+    --fg: 226 232 240;
+    --muted: 148 163 184;
+    --card: 17 24 39;
+    --border: 39 48 68;
+    --ring: 89 142 255;
+    --glass-bg: 20 27 45;
+    --glass-alpha: 0.55;
+    --glass-border: 148 163 184;
+    --glass-border-alpha: 0.16;
+    --shadow-color: 0 0 0;
+  }
+
+  * {
+    border-color: rgb(var(--border));
+  }
+
+  html {
+    scroll-behavior: smooth;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  body {
+    background-color: rgb(var(--bg));
+    color: rgb(var(--fg));
+    font-feature-settings: 'cv11', 'ss01';
+    text-rendering: optimizeLegibility;
+    -webkit-font-smoothing: antialiased;
+    min-height: 100dvh;
+  }
+
+  ::selection {
+    background: rgba(52, 102, 255, 0.25);
+  }
+
+  /* Scrollbar */
+  ::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
+  }
+  ::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  ::-webkit-scrollbar-thumb {
+    background: rgba(100, 116, 139, 0.35);
+    border-radius: 999px;
+    border: 2px solid transparent;
+    background-clip: content-box;
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    background: rgba(100, 116, 139, 0.6);
+    background-clip: content-box;
+  }
+
+  :focus-visible {
+    outline: 2px solid rgb(var(--ring));
+    outline-offset: 2px;
+  }
+}
+
+/* ================================================================== *
+ *  Components
+ * ================================================================== */
+@layer components {
+  .glass {
+    background-color: rgb(var(--glass-bg) / var(--glass-alpha));
+    border: 1px solid rgb(var(--glass-border) / var(--glass-border-alpha));
+    -webkit-backdrop-filter: blur(18px) saturate(160%);
+    backdrop-filter: blur(18px) saturate(160%);
+    box-shadow: 0 8px 32px -8px rgb(var(--shadow-color) / 0.16);
+  }
+
+  .glass-strong {
+    background-color: rgb(var(--glass-bg) / 0.85);
+    border: 1px solid rgb(var(--glass-border) / var(--glass-border-alpha));
+    -webkit-backdrop-filter: blur(28px) saturate(180%);
+    backdrop-filter: blur(28px) saturate(180%);
+  }
+
+  .glass-hover {
+    transition:
+      transform 0.35s cubic-bezier(0.16, 1, 0.3, 1),
+      box-shadow 0.35s cubic-bezier(0.16, 1, 0.3, 1),
+      border-color 0.35s ease;
+  }
+  .glass-hover:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 24px 60px -18px rgb(var(--shadow-color) / 0.3);
+    border-color: rgb(var(--ring) / 0.45);
+  }
+
+  .text-muted {
+    color: rgb(var(--muted));
+  }
+
+  .gradient-text {
+    background: linear-gradient(120deg, #3466ff, #7c3aed 45%, #06b6d4);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+
+  .aurora {
+    position: absolute;
+    inset: 0;
+    overflow: hidden;
+    pointer-events: none;
+    z-index: -1;
+  }
+  .aurora::before,
+  .aurora::after {
+    content: '';
+    position: absolute;
+    width: 46rem;
+    height: 46rem;
+    border-radius: 999px;
+    filter: blur(120px);
+    opacity: 0.4;
+    animation: aurora-move 22s ease-in-out infinite;
+  }
+  .aurora::before {
+    background: radial-gradient(circle, #3466ff 0%, transparent 65%);
+    top: -18rem;
+    left: -10rem;
+  }
+  .aurora::after {
+    background: radial-gradient(circle, #06b6d4 0%, transparent 65%);
+    bottom: -22rem;
+    right: -12rem;
+    animation-delay: -8s;
+  }
+  .dark .aurora::before {
+    opacity: 0.28;
+  }
+  .dark .aurora::after {
+    opacity: 0.24;
+  }
+
+  .skeleton {
+    position: relative;
+    overflow: hidden;
+    background: rgb(var(--muted) / 0.14);
+  }
+  .skeleton::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    transform: translateX(-100%);
+    background: linear-gradient(
+      90deg,
+      transparent,
+      rgb(255 255 255 / 0.28),
+      transparent
+    );
+    animation: shimmer 1.6s infinite;
+  }
+
+  .no-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+  .no-scrollbar {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+
+  .card-sheen {
+    position: relative;
+    isolation: isolate;
+  }
+  .card-sheen::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    background: linear-gradient(
+      140deg,
+      rgb(255 255 255 / 0.35) 0%,
+      transparent 42%
+    );
+    opacity: 0;
+    transition: opacity 0.35s ease;
+    z-index: 0;
+    pointer-events: none;
+  }
+  .card-sheen:hover::before {
+    opacity: 1;
+  }
+  .dark .card-sheen::before {
+    background: linear-gradient(
+      140deg,
+      rgb(255 255 255 / 0.08) 0%,
+      transparent 42%
+    );
+  }
+}
+
+@layer utilities {
+  .line-clamp-2 {
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+  .line-clamp-3 {
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+  .safe-bottom {
+    padding-bottom: env(safe-area-inset-bottom);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+  import { createClient, type SupabaseClient } from '@supabase/supabase-js';
+
+const url = process.env.NEXT_PUBLIC_SUPABASE_URL ?? '';
+const anonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY ?? '';
+
+export const hasSupabaseConfig = Boolean(url && anonKey);
+
+let cached: SupabaseClient | null = null;
+
+export function getSupabase(): SupabaseClient | null {
+  if (!hasSupabaseConfig) return null;
+  if (cached) return cached;
+  cached = createClient(url, anonKey, {
+    auth: { persistSession: true, autoRefreshToken: true },
+    global: { headers: { 'x-application-name': 'webhub-directory' } },
+  });
+  return cached;
+}
+
+/* ---------------- Table names (single source of truth) ------------- */
+export const TABLES = {
+  sites: 'sites',
+  reviews: 'reviews',
+} as const;
+  import { hasSupabaseConfig } from '@/lib/supabase';
+import { LocalRepository } from './local';
+import { SupabaseRepository } from './supabase';
+import type { DirectoryRepository } from './types';
+
+export type { DirectoryRepository } from './types';
+export { LocalRepository } from './local';
+export { SupabaseRepository } from './supabase';
+export { buildSite } from './local';
+
+let instance: DirectoryRepository | null = null;
+
+export function getRepository(): DirectoryRepository {
+  if (instance) return instance;
+
+  const mode = (process.env.NEXT_PUBLIC_DATA_SOURCE ?? 'auto').toLowerCase();
+
+  if (mode === 'supabase' || (mode === 'auto' && hasSupabaseConfig)) {
+    try {
+      instance = new SupabaseRepository();
+      return instance;
+    } catch (err) {
+      console.warn('[repository] Supabase init failed → fallback local', err);
+    }
+  }
+
+  instance = new LocalRepository();
+  return instance;
+}
+
+/** For tests / hot-swapping */
+export function setRepository(repo: DirectoryRepository): void {
+  instance = repo;
+}
+  import type { Review } from '@/types';
+
+interface RawReview {
+  slug: string;
+  author: string;
+  rating: number;
+  comment: string;
+  daysAgo: number;
+  helpful: number;
+}
+
+const RAW: RawReview[] = [
+  { slug: 'chatgpt', author: 'Nattapong S.', rating: 5, comment: 'ใช้ร่างอีเมลกับสรุปเอกสารทุกวัน ประหยัดเวลาไปเยอะมาก โดยเฉพาะงานภาษาอังกฤษ', daysAgo: 3, helpful: 42 },
+  { slug: 'chatgpt', author: 'Priya M.', rating: 4, comment: 'Great for brainstorming, but always double-check factual claims before shipping.', daysAgo: 12, helpful: 18 },
+  { slug: 'claude', author: 'Kittipong R.', rating: 5, comment: 'อ่านไฟล์ PDF ยาว ๆ ได้ดีมาก สรุปแล้วจับประเด็นแม่นกว่าที่คิด', daysAgo: 5, helpful: 37 },
+  { slug: 'claude', author: 'Daniel W.', rating: 5, comment: 'Artifacts make prototyping small tools ridiculously fast. Best coding companion for me.', daysAgo: 21, helpful: 29 },
+  { slug: 'figma', author: 'Sasitorn P.', rating: 5, comment: 'ทำงานร่วมกับทีมพร้อมกันได้ลื่นมาก ระบบ component + variable ช่วยงาน design system สุด ๆ', daysAgo: 8, helpful: 64 },
+  { slug: 'figma', author: 'Marco B.', rating: 5, comment: 'Auto layout finally clicked for me. Dev Mode saves hours of handoff meetings.', daysAgo: 30, helpful: 25 },
+  { slug: 'github', author: 'Anucha T.', rating: 5, comment: 'Actions ทำ CI/CD ได้ครบจบในที่เดียว ฟรีสำหรับ public repo ด้วย', daysAgo: 2, helpful: 51 },
+  { slug: 'vercel', author: 'Peerapat J.', rating: 5, comment: 'deploy Next.js ง่ายสุดในตลาด preview URL ต่อ PR ช่วยรีวิวงานได้เร็วมาก', daysAgo: 6, helpful: 33 },
+  { slug: 'notion', author: 'Warisara K.', rating: 4, comment: 'ยืดหยุ่นมาก แต่ต้องวางโครงสร้างให้ดีตั้งแต่แรก ไม่งั้นรกเร็ว', daysAgo: 14, helpful: 40 },
+  { slug: 'supabase', author: 'Thanakrit L.', rating: 5, comment: 'RLS + Realtime ใช้งานจริงได้เลย เอกสารเข้าใจง่าย ทีมเล็กประหยัดเวลาไปมาก', daysAgo: 4, helpful: 22 },
+  { slug: 'canva', author: 'Ploy N.', rating: 5, comment: 'ทำกราฟิกโซเชียลได้เร็วมาก ไม่ต้องมีพื้นฐานดีไซน์ก็ทำได้สวย', daysAgo: 9, helpful: 47 },
+  { slug: 'freecodecamp', author: 'Somsak D.', rating: 5, comment: 'ฟรีจริง เนื้อหาเยอะและมีโปรเจกต์ให้ทำ เหมาะกับคนเริ่มต้นสายเว็บมาก', daysAgo: 17, helpful: 58 },
+  { slug: 'stripe', author: 'Alex K.', rating: 5, comment: 'The API docs are the gold standard. Integration took less than a day.', daysAgo: 11, helpful: 31 },
+  { slug: 'cloudflare', author: 'Chalermchai V.', rating: 5, comment: 'DNS + CDN ฟรีที่คุณภาพดีเกินราคา Workers ก็ใช้ทำ edge API ได้สบาย', daysAgo: 7, helpful: 26 },
+  { slug: 'unsplash', author: 'Mint C.', rating: 5, comment: 'ภาพสวย ใช้ฟรีเชิงพาณิชย์ได้ เหมาะกับงาน mockup และ blog cover', daysAgo: 19, helpful: 20 },
+  { slug: 'perplexity-ai', author: 'Rungnapa H.', rating: 5, comment: 'ชอบที่มีลิงก์อ้างอิงทุกคำตอบ ตรวจสอบต่อได้ง่ายกว่าแชตบอตทั่วไป', daysAgo: 5, helpful: 34 },
+  { slug: 'tradingview', author: 'Wichai P.', rating: 5, comment: 'กราฟลื่น อินดิเคเตอร์เยอะ คอมมูนิตี้แชร์ไอเดียเทรดเยอะมาก', daysAgo: 13, helpful: 28 },
+  { slug: 'discord', author: 'Bank S.', rating: 5, comment: 'ใช้เป็นห้องเรียนกลุ่มและคอมมูนิตี้เดฟ คุณภาพเสียงดี แชร์จอก็ลื่น', daysAgo: 10, helpful: 19 },
+];
+
+export const MOCK_REVIEWS: Review[] = RAW.map((r, i) => ({
+  id: `seed_rev_${i + 1}`,
+  siteId: `seed_${r.slug}`,
+  author: r.author,
+  avatarSeed: r.author,
+  rating: r.rating,
+  comment: r.comment,
+  helpful: r.helpful,
+  createdAt: new Date(Date.now() - r.daysAgo * 86_400_000).toISOString(),
+}));
+  'use client';
+
+import { useEffect, useState } from 'react';
+
+export function useDebounce<T>(value: T, delay = 250): T {
+  const [debounced, setDebounced] = useState(value);
+
+  useEffect(() => {
+    const t = setTimeout(() => setDebounced(value), delay);
+    return () => clearTimeout(t);
+  }, [value, delay]);
+
+  return debounced;
+}
+  'use client';
+
+import React, {
+  createContext,
+  useCallback,
+  useContext,
+  useEffect,
+  useMemo,
+  useState,
+} from 'react';
+import { getRepository } from '@/lib/repository';
+import { STORAGE_KEYS, readStorage, writeStorage } from '@/lib/storage';
+import { applyFilters, collectTags, countByCategory, getTrending } from '@/lib/filter';
+import { pickOfTheDay } from '@/lib/utils';
+import { toast } from '@/components/ui/Toaster';
+import {
+  DEFAULT_FILTERS,
+  type ApprovalStatus,
+  type DataSource,
+  type FilterState,
+  type Review,
+  type ReviewInput,
+  type WebSite,
+  type WebSiteInput,
+  type WebSitePatch,
+} from '@/types';
+
+interface DirectoryContextValue {
+  /* data */
+  sites: WebSite[];
+  visibleSites: WebSite[];
+  reviews: Review[];
+  loading: boolean;
+  source: DataSource;
+
+  /* derived */
+  featured: WebSite[];
+  trending: WebSite[];
+  siteOfTheDay: WebSite | null;
+  tagCloud: { tag: string; count: number }[];
+  categoryCounts: Record<string, number>;
+  pendingCount: number;
+
+  /* filters */
+  filters: FilterState;
+  setFilters: (patch: Partial<FilterState>) => void;
+  resetFilters: () => void;
+
+  /* favorites */
+  favorites: string[];
+  isFavorite: (id: string) => boolean;
+  toggleFavorite: (id: string) => void;
+  favoriteSites: WebSite[];
+
+  /* recent */
+  recent: string[];
+  recentSites: WebSite[];
+
+  /* actions */
+  refresh: () => Promise<void>;
+  registerVisit: (site: WebSite) => void;
+  addSite: (input: WebSiteInput) => Promise<WebSite>;
+  updateSite: (id: string, patch: WebSitePatch) => Promise<void>;
+  deleteSite: (id: string) => Promise<void>;
+  setApproval: (id: string, status: ApprovalStatus) => Promise<void>;
+  addReview: (input: ReviewInput) => Promise<void>;
+  deleteReview: (id: string) => Promise<void>;
+  reviewsFor: (siteId: string) => Review[];
+  myRating: (siteId: string) => number | null;
+  resetAll: () => Promise<void>;
+  getBySlug: (slug: string) => WebSite | null;
+}
+
+const DirectoryContext = createContext<DirectoryContextValue | null>(null);
+
+export function DirectoryProvider({ children }: { children: React.ReactNode }) {
+  const repo = useMemo(() => getRepository(), []);
+
+  const [sites, setSites] = useState<WebSite[]>([]);
+  const [reviews, setReviews] = useState<Review[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [filters, setFiltersState] = useState<FilterState>(DEFAULT_FILTERS);
+  const [favorites, setFavorites] = useState<string[]>([]);
+  const [recent, setRecent] = useState<string[]>([]);
+  const [myRatings, setMyRatings] = useState<Record<string, number>>({});
+
+  /* ------------------------- initial load ------------------------- */
+
+  const load = useCallback(async () => {
+    setLoading(true);
+    try {
+      const [s, r] = await Promise.all([repo.listSites(), repo.listReviews()]);
+      setSites(s);
+      setReviews(r);
+    } catch (err) {
+      console.error('[directory] load failed', err);
+      toast.error('โหลดข้อมูลไม่สำเร็จ', 'กรุณาลองรีเฟรชหน้าอีกครั้ง');
+    } finally {
+      setLoading(false);
+    }
+  }, [repo]);
+
+  useEffect(() => {
+    void load();
+    setFavorites(readStorage<string[]>(STORAGE_KEYS.favorites, []));
+    setRecent(readStorage<string[]>(STORAGE_KEYS.recent, []));
+    setMyRatings(readStorage<Record<string, number>>(STORAGE_KEYS.myRatings, {}));
+  }, [load]);
+
+  /* --------------------------- filters ---------------------------- */
+
+  const setFilters = useCallback((patch: Partial<FilterState>) => {
+    setFiltersState((prev) => {
+      const next = { ...prev, ...patch };
+      // Reset subcategory when category changes
+      if (patch.categoryId !== undefined && patch.subcategoryId === undefined) {
+        next.subcategoryId = null;
+      }
+      writeStorage(STORAGE_KEYS.filters, next);
+      return next;
+    });
+  }, []);
+
+  const resetFilters = useCallback(() => {
+    setFiltersState(DEFAULT_FILTERS);
+    writeStorage(STORAGE_KEYS.filters, DEFAULT_FILTERS);
+  }, []);
+
+  /* -------------------------- favorites --------------------------- */
+
+  const toggleFavorite = useCallback((id: string) => {
+    setFavorites((prev) => {
+      const next = prev.includes(id)
+        ? prev.filter((f) => f !== id)
+        : [id, ...prev];
+      writeStorage(STORAGE_KEYS.favorites, next);
+      toast.info(
+        prev.includes(id) ? 'นำออกจากรายการโปรดแล้ว' : 'บันทึกลงรายการโปรดแล้ว'
+      );
+      return next;
+    });
+  }, []);
+
+  const isFavorite = useCallback(
+    (id: string) => favorites.includes(id),
+    [favorites]
+  );
+
+  /* --------------------------- visits ----------------------------- */
+
+  const registerVisit = useCallback(
+    (site: WebSite) => {
+      setRecent((prev) => {
+        const next = [site.id, ...prev.filter((i) => i !== site.id)].slice(0, 24);
+        writeStorage(STORAGE_KEYS.recent, next);
+        return next;
+      });
+      setSites((prev) =>
+        prev.map((s) => (s.id === site.id ? { ...s, clicks: s.clicks + 1 } : s))
+      );
+      void repo.incrementClicks(site.id);
+    },
+    [repo]
+  );
+
+  /* -------------------------- CRUD ops ---------------------------- */
+
+  const addSite = useCallback(
+    async (input: WebSiteInput) => {
+      const created = await repo.createSite(input);
+      setSites((prev) => [created, ...prev]);
+      return created;
+    },
+    [repo]
+  );
+
+  const updateSite = useCallback(
+    async (id: string, patch: WebSitePatch) => {
+      const updated = await repo.updateSite(id, patch);
+      if (updated) {
+        setSites((prev) => prev.map((s) => (s.id === id ? updated : s)));
+      }
+    },
+    [repo]
+  );
+
+  const deleteSite = useCallback(
+    async (id: string) => {
+      await repo.deleteSite(id);
+      setSites((prev) => prev.filter((s) => s.id !== id));
+      setReviews((prev) => prev.filter((r) => r.siteId !== id));
+    },
+    [repo]
+  );
+
+  const setApproval = useCallback(
+    async (id: string, status: ApprovalStatus) => {
+      const updated = await repo.setApproval(id, status);
+      if (updated) setSites((prev) => prev.map((s) => (s.id === id ? updated : s)));
+    },
+    [repo]
+  );
+
+  /* --------------------------- reviews ---------------------------- */
+
+  const addReview = useCallback(
+    async (input: ReviewInput) => {
+      const created = await repo.addReview(input);
+      setReviews((prev) => [created, ...prev]);
+      setMyRatings((prev) => {
+        const next = { ...prev, [input.siteId]: input.rating };
+        writeStorage(STORAGE_KEYS.myRatings, next);
+        return next;
+      });
+      const fresh = await repo.listSites();
+      setSites(fresh);
+    },
+    [repo]
+  );
+
+  const deleteReview = useCallback(
+    async (id: string) => {
+      await repo.deleteReview(id);
+      setReviews((prev) => prev.filter((r) => r.id !== id));
+      const fresh = await repo.listSites();
+      setSites(fresh);
+    },
+    [repo]
+  );
+
+  const reviewsFor = useCallback(
+    (siteId: string) =>
+      reviews
+        .filter((r) => r.siteId === siteId)
+        .sort((a, b) => +new Date(b.createdAt) - +new Date(a.createdAt)),
+    [reviews]
+  );
+
+  const myRating = useCallback(
+    (siteId: string) => myRatings[siteId] ?? null,
+    [myRatings]
+  );
+
+  const resetAll = useCallback(async () => {
+    await repo.reset();
+    await load();
+    setFavorites([]);
+    setRecent([]);
+    setMyRatings({});
+    writeStorage(STORAGE_KEYS.favorites, []);
+    writeStorage(STORAGE_KEYS.recent, []);
+    writeStorage(STORAGE_KEYS.myRatings, {});
+  }, [repo, load]);
+
+  /* -------------------------- derived ----------------------------- */
+
+  const approved = useMemo(
+    () => sites.filter((s) => s.approvalStatus === 'approved'),
+    [sites]
+  );
+
+  const visibleSites = useMemo(
+    () => applyFilters(sites, filters),
+    [sites, filters]
+  );
+
+  const featured = useMemo(
+    () =>
+      approved
+        .filter((s) => s.featured)
+        .sort((a, b) => b.popularity - a.popularity),
+    [approved]
+  );
+
+  const trending = useMemo(() => getTrending(approved, 8), [approved]);
+
+  const siteOfTheDay = useMemo(
+    () => pickOfTheDay(featured.length ? featured : approved, 'sotd'),
+    [featured, approved]
+  );
+
+  const tagCloud = useMemo(() => collectTags(approved, 36), [approved]);
+  const categoryCounts = useMemo(() => countByCategory(sites), [sites]);
+  const pendingCount = useMemo(
+    () => sites.filter((s) => s.approvalStatus === 'pending').length,
+    [sites]
+  );
+
+  const favoriteSites = useMemo(
+    () =>
+      favorites
+        .map((id) => sites.find((s) => s.id === id))
+        .filter((s): s is WebSite => Boolean(s)),
+    [favorites, sites]
+  );
+
+  const recentSites = useMemo(
+    () =>
+      recent
+        .map((id) => sites.find((s) => s.id === id))
+        .filter((s): s is WebSite => Boolean(s)),
+    [recent, sites]
+  );
+
+  const getBySlug = useCallback(
+    (slug: string) => sites.find((s) => s.slug === slug) ?? null,
+    [sites]
+  );
+
+  const value: DirectoryContextValue = {
+    sites,
+    visibleSites,
+    reviews,
+    loading,
+    source: repo.source,
+    featured,
+    trending,
+    siteOfTheDay,
+    tagCloud,
+    categoryCounts,
+    pendingCount,
+    filters,
+    setFilters,
+    resetFilters,
+    favorites,
+    isFavorite,
+    toggleFavorite,
+    favoriteSites,
+    recent,
+    recentSites,
+    refresh: load,
+    registerVisit,
+    addSite,
+    updateSite,
+    deleteSite,
+    setApproval,
+    addReview,
+    deleteReview,
+    reviewsFor,
+    myRating,
+    resetAll,
+    getBySlug,
+  };
+
+  return (
+    <DirectoryContext.Provider value={value}>
+      {children}
+    </DirectoryContext.Provider>
+  );
+}
+
+export function useDirectory(): DirectoryContextValue {
+  const ctx = useContext(DirectoryContext);
+  if (!ctx)
+    throw new Error('useDirectory must be used inside <DirectoryProvider>');
+  return ctx;
+}
+      export function useDirectory(): DirectoryContextValue {
+
+  const ctx = useContext(DirectoryContext);
+
+  if (!ctx)
+
+    throw new Error('useDirectory must be used inside <DirectoryProvider>');
+
+  return ctx;
+
+}
+      'use client';
+
+import React, { useCallback, useEffect, useState } from 'react';
+import { AlertTriangle, CheckCircle2, Info, X, XCircle } from 'lucide-react';
+import { cn, uid } from '@/lib/utils';
+import type { ToastKind, ToastPayload } from '@/types';
+
+const EVENT = 'webhub:toast';
+
+function emit(kind: ToastKind, title: string, message?: string, duration = 3600) {
+  if (typeof window === 'undefined') return;
+  const payload: ToastPayload = { id: uid('toast'), kind, title, message, duration };
+  window.dispatchEvent(new CustomEvent<ToastPayload>(EVENT, { detail: payload }));
+}
+
+export const toast = {
+  success: (title: string, message?: string) => emit('success', title, message),
+  error: (title: string, message?: string) => emit('error', title, message, 5000),
+  info: (title: string, message?: string) => emit('info', title, message),
+  warning: (title: string, message?: string) => emit('warning', title, message, 4500),
+};
+
+const ICONS: Record<ToastKind, React.ReactNode> = {
+  success: <CheckCircle2 className="h-5 w-5 text-emerald-500" />,
+  error: <XCircle className="h-5 w-5 text-rose-500" />,
+  info: <Info className="h-5 w-5 text-sky-500" />,
+  warning: <AlertTriangle className="h-5 w-5 text-amber-500" />,
+};
+
+const BORDER: Record<ToastKind, string> = {
+  success: 'border-l-emerald-500',
+  error: 'border-l-rose-500',
+  info: 'border-l-sky-500',
+  warning: 'border-l-amber-500',
+};
+
+export function Toaster() {
+  const [items, setItems] = useState<ToastPayload[]>([]);
+
+  const remove = useCallback((id: string) => {
+    setItems((prev) => prev.filter((t) => t.id !== id));
+  }, []);
+
+  useEffect(() => {
+    const handler = (e: Event) => {
+      const detail = (e as CustomEvent<ToastPayload>).detail;
+      setItems((prev) => [...prev.slice(-4), detail]);
+      window.setTimeout(() => remove(detail.id), detail.duration ?? 3600);
+    };
+    window.addEventListener(EVENT, handler);
+    return () => window.removeEventListener(EVENT, handler);
+  }, [remove]);
+
+  return (
+    <div
+      className="pointer-events-none fixed inset-x-0 bottom-0 z-[200] flex flex-col items-center gap-2 p-4 sm:inset-x-auto sm:right-6 sm:bottom-6 sm:items-end safe-bottom"
+      aria-live="polite"
+    >
+      {items.map((t) => (
+        <div
+          key={t.id}
+          className={cn(
+            'pointer-events-auto w-full max-w-sm animate-slide-up',
+            'glass-strong rounded-2xl border-l-4 p-4 shadow-glass-lg',
+            BORDER[t.kind]
+          )}
+          role="status"
+        >
+          <div className="flex items-start gap-3">
+            <span className="mt-0.5 shrink-0">{ICONS[t.kind]}</span>
+            <div className="min-w-0 flex-1">
+              <p className="text-sm font-bold leading-tight">{t.title}</p>
+              {t.message && (
+                <p className="mt-1 text-xs leading-relaxed text-muted">
+                  {t.message}
+                </p>
+              )}
+            </div>
+            <button
+              onClick={() => remove(t.id)}
+              className="shrink-0 rounded-lg p-1 text-muted transition hover:bg-slate-900/5 dark:hover:bg-white/10"
+              aria-label="ปิดการแจ้งเตือน"
+            >
+              <X className="h-4 w-4" />
+            </button>
+          </div>
+        </div>
+      ))}
+    </div>
+  );
+}
+        'use client';
+
+import { useState } from 'react';
+import { Header } from './Header';
+import { Sidebar } from './Sidebar';
+import { Footer } from './Footer';
+
+export function AppShell({ children }: { children: React.ReactNode }) {
+  const [sidebarOpen, setSidebarOpen] = useState(false);
+
+  return (
+    <div className="relative min-h-dvh">
+      <div className="aurora" aria-hidden />
+      <div
+        className="pointer-events-none fixed inset-0 -z-10 bg-grid-light bg-grid opacity-60 dark:bg-grid-dark"
+        aria-hidden
+      />
+
+      <Header onOpenSidebar={() => setSidebarOpen(true)} />
+
+      <div className="mx-auto flex w-full max-w-[1600px] gap-0 px-0 lg:px-6">
+        <Sidebar open={sidebarOpen} onClose={() => setSidebarOpen(false)} />
+        <main className="min-w-0 flex-1 px-4 pb-16 pt-6 sm:px-6 lg:pl-8 lg:pr-0">
+          {children}
+        </main>
+      </div>
+
+      <Footer />
+    </div>
+  );
+}
+        'use client';
+
+import { Database, Globe2, Layers, Star, Users } from 'lucide-react';
+import { useMemo } from 'react';
+import { useDirectory } from '@/context/DirectoryProvider';
+import { CATEGORIES } from '@/data/categories';
+import { GlassCard } from '@/components/ui/GlassCard';
+import { formatNumber } from '@/lib/utils';
+
+export function StatsBar() {
+  const { sites, reviews, source } = useDirectory();
+
+  const stats = useMemo(() => {
+    const approved = sites.filter((s) => s.approvalStatus === 'approved');
+    const avgRating =
+      approved.reduce((sum, s) => sum + s.rating, 0) / (approved.length || 1);
+    const totalClicks = approved.reduce((sum, s) => sum + s.clicks, 0);
+
+    return [
+      {
+        icon: Globe2,
+        label: 'เว็บไซต์ทั้งหมด',
+        value: formatNumber(approved.length),
+        tone: 'from-brand-500 to-brand-700',
+      },
+      {
+        icon: Layers,
+        label: 'หมวดหมู่',
+        value: String(CATEGORIES.length),
+        tone: 'from-violet-500 to-fuchsia-600',
+      },
+      {
+        icon: Star,
+        label: 'คะแนนเฉลี่ย',
+        value: avgRating.toFixed(2),
+        tone: 'from-amber-400 to-orange-500',
+      },
+      {
+        icon: Users,
+        label: 'รีวิวจากผู้ใช้',
+        value: formatNumber(reviews.length),
+        tone: 'from-emerald-500 to-teal-600',
+      },
+      {
+        icon: Database,
+        label: `เข้าชมรวม (${source})`,
+        value: formatNumber(totalClicks),
+        tone: 'from-sky-500 to-cyan-600',
+      },
+    ];
+  }, [sites, reviews, source]);
+
+  return (
+    <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-5">
+      {stats.map(({ icon: Icon, label, value, tone }) => (
+        <GlassCard key={label} hover padding="none" className="p-4">
+          <div className="flex items-center gap-3">
+            <span
+              className={`grid h-10 w-10 shrink-0 place-items-center rounded-xl bg-gradient-to-br ${tone} text-white shadow-md`}
+            >
+              <Icon className="h-5 w-5" />
+            </span>
+            <div className="min-w-0">
+              <p className="text-lg font-extrabold leading-none tabular-nums">
+                {value}
+              </p>
+              <p className="mt-1 truncate text-[11px] font-medium text-muted">
+                {label}
+              </p>
+            </div>
+          </div>
+        </GlassCard>
+      ))}
+    </div>
+  );
+}
+        'use client';
+
+import { useMemo, useState } from 'react';
+import { MessageSquarePlus, ThumbsUp, Trash2, UserRound } from 'lucide-react';
+import { useDirectory } from '@/context/DirectoryProvider';
+import { GlassCard } from '@/components/ui/GlassCard';
+import { Button } from '@/components/ui/Button';
+import { RatingStars } from '@/components/ui/RatingStars';
+import { toast } from '@/components/ui/Toaster';
+import { cn, hashString, timeAgo } from '@/lib/utils';
+import type { WebSite } from '@/types';
+
+const AVATAR_GRADIENTS = [
+  'from-brand-500 to-violet-600',
+  'from-emerald-500 to-teal-600',
+  'from-amber-500 to-orange-600',
+  'from-rose-500 to-pink-600',
+  'from-sky-500 to-cyan-600',
+  'from-fuchsia-500 to-purple-600',
+];
+
+export function ReviewSection({ site }: { site: WebSite }) {
+  const { reviewsFor, addReview, deleteReview, myRating } = useDirectory();
+  const reviews = reviewsFor(site.id);
+  const mine = myRating(site.id);
+
+  const [author, setAuthor] = useState('');
+  const [rating, setRating] = useState(mine ?? 0);
+  const [comment, setComment] = useState('');
+  const [submitting, setSubmitting] = useState(false);
+
+  const distribution = useMemo(() => {
+    const buckets = [0, 0, 0, 0, 0];
+    reviews.forEach((r) => {
+      buckets[5 - Math.min(5, Math.max(1, r.rating))] += 1;
+    });
+    return buckets;
+  }, [reviews]);
+
+  const avg = useMemo(() => {
+    if (!reviews.length) return site.rating;
+    return reviews.reduce((s, r) => s + r.rating, 0) / reviews.length;
+  }, [reviews, site.rating]);
+
+  const submit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (rating < 1) {
+      toast.warning('กรุณาให้คะแนนก่อน', 'เลือกดาว 1–5 ดวงเพื่อให้คะแนนเว็บไซต์นี้');
+      return;
+    }
+    if (comment.trim().length < 5) {
+      toast.warning('รีวิวสั้นเกินไป', 'กรุณาเขียนอย่างน้อย 5 ตัวอักษร');
+      return;
+    }
+
+    setSubmitting(true);
+    try {
+      await addReview({
+        siteId: site.id,
+        author: author.trim() || 'ผู้ใช้ทั่วไป',
+        rating,
+        comment: comment.trim(),
+      });
+      toast.success('ขอบคุณสำหรับรีวิว!', 'ความคิดเห็นของคุณถูกบันทึกแล้ว');
+      setComment('');
+      setAuthor('');
+    } catch {
+      toast.error('บันทึกรีวิวไม่สำเร็จ', 'กรุณาลองใหม่อีกครั้ง');
+    } finally {
+      setSubmitting(false);
+    }
+  };
+
+  return (
+    <section className="space-y-6">
+      <div className="grid gap-5 lg:grid-cols-[280px_1fr]">
+        {/* Summary */}
+        <GlassCard padding="lg" className="h-fit text-center">
+          <p className="text-5xl font-black tabular-nums">{avg.toFixed(1)}</p>
+          <RatingStars value={avg} size={20} className="mt-2 justify-center" />
+          <p className="mt-2 text-xs text-muted">
+            จาก {reviews.length.toLocaleString()} รีวิวในระบบ
+          </p>
+
+          <div className="mt-5 space-y-1.5">
+            {distribution.map((count, i) => {
+              const stars = 5 - i;
+              const pct = reviews.length ? (count / reviews.length) * 100 : 0;
+              return (
+                <div key={stars} className="flex items-center gap-2 text-[11px]">
+                  <span className="w-3 font-semibold tabular-nums">{stars}</span>
+                  <div className="h-1.5 flex-1 overflow-hidden rounded-full bg-slate-500/15">
+                    <div
+                      className="h-full rounded-full bg-amber-400 transition-all duration-500"
+                      style={{ width: `${pct}%` }}
+                    />
+                  </div>
+                  <span className="w-6 text-right tabular-nums text-muted">
+                    {count}
+                  </span>
+                </div>
+              );
+            })}
+          </div>
+        </GlassCard>
+
+        {/* Write review */}
+        <GlassCard padding="lg">
+          <h3 className="flex items-center gap-2 text-base font-bold">
+            <MessageSquarePlus className="h-4.5 w-4.5 text-brand-500" />
+            เขียนรีวิวของคุณ
+          </h3>
+
+          <form onSubmit={submit} className="mt-4 space-y-4">
+            <div className="grid gap-4 sm:grid-cols-2">
+              <div>
+                <label
+                  htmlFor="review-author"
+                  className="mb-1.5 block text-xs font-bold uppercase tracking-wider text-muted"
+                >
+                  ชื่อผู้รีวิว
+                </label>
+                <input
+                  id="review-author"
+                  value={author}
+                  onChange={(e) => setAuthor(e.target.value)}
+                  maxLength={40}
+                  placeholder="เช่น สมชาย ใจดี (เว้นว่างได้)"
+                  className="h-11 w-full rounded-xl bg-slate-500/10 px-4 text-sm outline-none ring-1 ring-inset ring-transparent transition placeholder:text-muted focus:ring-brand-500"
+                />
+              </div>
+
+              <div>
+                <span className="mb-1.5 block text-xs font-bold uppercase tracking-wider text-muted">
+                  ให้คะแนน
+                </span>
+                <div className="flex h-11 items-center gap-3 rounded-xl bg-slate-500/10 px-4">
+                  <RatingStars
+                    value={rating}
+                    interactive
+                    size={22}
+                    onChange={setRating}
+                  />
+                  <span className="text-xs font-semibold text-muted">
+                    {rating > 0 ? `${rating}.0 / 5.0` : 'ยังไม่ได้ให้คะแนน'}
+                  </span>
+                </div>
+              </div>
+            </div>
+
+            <div>
+              <label
+                htmlFor="review-comment"
+                className="mb-1.5 block text-xs font-bold uppercase tracking-wider text-muted"
+              >
+                ความคิดเห็น
+              </label>
+              <textarea
+                id="review-comment"
+                value={comment}
+                onChange={(e) => setComment(e.target.value)}
+                rows={4}
+                maxLength={600}
+                placeholder="เล่าประสบการณ์ใช้งานจริง จุดเด่น จุดที่ควรระวัง หรือเคสที่เหมาะกับเว็บนี้…"
+                className="w-full resize-none rounded-xl bg-slate-500/10 p-4 text-sm leading-relaxed outline-none ring-1 ring-inset ring-transparent transition placeholder:text-muted focus:ring-brand-500"
+              />
+              <p className="mt-1 text-right text-[11px] text-muted">
+                {comment.length}/600
+              </p>
+            </div>
+
+            <Button type="submit" loading={submitting} fullWidth size="md">
+              ส่งรีวิว
+            </Button>
+          </form>
+        </GlassCard>
+      </div>
+
+      {/* Review list */}
+      <div className="space-y-3">
+        <h3 className="text-base font-bold">
+          ความคิดเห็นทั้งหมด ({reviews.length})
+        </h3>
+
+        {reviews.length === 0 ? (
+          <GlassCard padding="lg" className="text-center text-sm text-muted">
+            ยังไม่มีรีวิวสำหรับเว็บไซต์นี้ — เป็นคนแรกที่แชร์ประสบการณ์กันเลย!
+          </GlassCard>
+        ) : (
+          reviews.map((r) => {
+            const g =
+              AVATAR_GRADIENTS[hashString(r.author) % AVATAR_GRADIENTS.length];
+            return (
+              <GlassCard key={r.id} padding="md" hover className="group">
+                <div className="flex gap-3.5">
+                  <span
+                    className={cn(
+                      'grid h-11 w-11 shrink-0 place-items-center rounded-2xl bg-gradient-to-br text-sm font-bold text-white shadow-md',
+                      g
+                    )}
+                  >
+                    {r.author.trim().charAt(0).toUpperCase() || (
+                      <UserRound className="h-5 w-5" />
+                    )}
+                  </span>
+
+                  <div className="min-w-0 flex-1">
+                    <div className="flex flex-wrap items-center gap-2">
+                      <span className="text-sm font-bold">{r.author}</span>
+                      <RatingStars value={r.rating} size={13} />
+                      <span className="text-[11px] text-muted">
+                        · {timeAgo(r.createdAt)}
+                      </span>
+                    </div>
+                    <p className="mt-2 whitespace-pre-line text-sm leading-relaxed text-muted">
+                      {r.comment}
+                    </p>
+                    <div className="mt-2.5 flex items-center gap-3">
+                      <button
+                        type="button"
+                        className="inline-flex items-center gap-1.5 text-[11px] font-semibold text-muted transition hover:text-brand-500"
+                      >
+                        <ThumbsUp className="h-3.5 w-3.5" /> มีประโยชน์ ({r.helpful})
+                      </button>
+                    </div>
+                  </div>
+
+                  <button
+                    onClick={async () => {
+                      await deleteReview(r.id);
+                      toast.info('ลบรีวิวแล้ว');
+                    }}
+                    aria-label="ลบรีวิว"
+                    className="h-8 w-8 shrink-0 rounded-lg text-muted opacity-0 transition hover:bg-rose-500/10 hover:text-rose-500 group-hover:opacity-100"
+                  >
+                    <Trash2 className="mx-auto h-4 w-4" />
+                  </button>
+                </div>
+              </GlassCard>
+            );
+          })
+        )}
+      </div>
+    </section>
+  );
+}
+                'use client';
+
+import { useState } from 'react';
+import {
+  CheckCircle2,
+  Globe,
+  Link2,
+  Loader2,
+  Sparkles,
+  Wand2,
+} from 'lucide-react';
+import { useDirectory } from '@/context/DirectoryProvider';
+import { GlassCard } from '@/components/ui/GlassCard';
+import { Button } from '@/components/ui/Button';
+import { Badge } from '@/components/ui/Badge';
+import { toast } from '@/components/ui/Toaster';
+import { CATEGORIES, CATEGORY_MAP } from '@/data/categories';
+import { fetchMetadata } from '@/lib/metadata';
+import { cn, faviconFor, getDomain, isValidUrl, normalizeUrl, PRICING_META } from '@/lib/utils';
+import type { PricingType } from '@/types';
+
+interface FormState {
+  url: string;
+  name: string;
+  description: string;
+  descriptionTh: string;
+  categoryId: string;
+  subcategoryId: string;
+  tags: string;
+  pricing: PricingType;
+  coverImage: string;
+  faviconUrl: string;
+  submittedBy: string;
+}
+
+const INITIAL: FormState = {
+  url: '',
+  name: '',
+  description: '',
+  descriptionTh: '',
+  categoryId: CATEGORIES[0].id,
+  subcategoryId: CATEGORIES[0].subcategories[0].id,
+  tags: '',
+  pricing: 'freemium',
+  coverImage: '',
+  faviconUrl: '',
+  submittedBy: '',
+};
+
+export function SubmitForm() {
+  const { addSite, sites } = useDirectory();
+  const [form, setForm] = useState<FormState>(INITIAL);
+  const [fetching, setFetching] = useState(false);
+  const [submitting, setSubmitting] = useState(false);
+  const [done, setDone] = useState(false);
+  const [autoFilled, setAutoFilled] = useState(false);
+
+  const set = <K extends keyof FormState>(key: K, value: FormState[K]) =>
+    setForm((prev) => ({ ...prev, [key]: value }));
+
+  const subcategories =
+    CATEGORY_MAP[form.categoryId]?.subcategories ?? CATEGORIES[0].subcategories;
+
+  /* ------------------- Auto-fetch Open Graph data ------------------ */
+  const handleAutoFetch = async () => {
+    if (!isValidUrl(form.url)) {
+      toast.warning('URL ไม่ถูกต้อง', 'กรุณาใส่ลิงก์ให้ครบ เช่น https://example.com');
+      return;
+    }
+
+    const normalized = normalizeUrl(form.url);
+    const duplicate = sites.find((s) => s.domain === getDomain(normalized));
+    if (duplicate) {
+      toast.warning('เว็บนี้มีอยู่แล้วในระบบ', `พบ "${duplicate.name}" ในไดเรกทอรี`);
+    }
+
+    setFetching(true);
+    try {
+      const meta = await fetchMetadata(normalized);
+      setForm((prev) => ({
+        ...prev,
+        url: meta.finalUrl,
+        name: prev.name || meta.siteName || meta.title,
+        description: prev.description || meta.description || meta.title,
+        coverImage: meta.image ?? '',
+        faviconUrl: meta.favicon,
+        tags:
+          prev.tags ||
+          meta.keywords.slice(0, 6).join(', ') ||
+          getDomain(meta.finalUrl).split('.')[0],
+      }));
+      setAutoFilled(true);
+      toast.success('ดึงข้อมูลสำเร็จ', 'ระบบเติมชื่อ คำอธิบาย ภาพปก และ favicon ให้แล้ว');
+    } catch (err) {
+      console.error(err);
+      setForm((prev) => ({
+        ...prev,
+        faviconUrl: faviconFor(normalized),
+        name: prev.name || getDomain(normalized).split('.')[0],
+      }));
+      toast.error(
+        'ดึง Metadata ไม่สำเร็จ',
+        'เว็บปลายทางอาจบล็อกการเข้าถึง — กรุณากรอกข้อมูลเอง'
+      );
+    } finally {
+      setFetching(false);
+    }
+  };
+
+  /* ---------------------------- Submit ---------------------------- */
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+
+    if (!isValidUrl(form.url)) {
+      toast.warning('URL ไม่ถูกต้อง');
+      return;
+    }
+    if (form.name.trim().length < 2) {
+      toast.warning('กรุณากรอกชื่อเว็บไซต์');
+      return;
+    }
+    if (form.description.trim().length < 10) {
+      toast.warning('คำอธิบายสั้นเกินไป', 'กรุณาอธิบายอย่างน้อย 10 ตัวอักษร');
+      return;
+    }
+
+    setSubmitting(true);
+    try {
+      await addSite({
+        name: form.name.trim(),
+        url: normalizeUrl(form.url),
+        description: form.description.trim(),
+        descriptionTh: form.descriptionTh.trim(),
+        categoryId: form.categoryId,
+        subcategoryId: form.subcategoryId,
+        tags: form.tags
+          .split(',')
+          .map((t) => t.trim().toLowerCase())
+          .filter(Boolean),
+        pricing: form.pricing,
+        coverImage: form.coverImage || null,
+        faviconUrl: form.faviconUrl || faviconFor(form.url),
+        approvalStatus: 'pending',
+        submittedBy: form.submittedBy.trim() || 'anonymous',
+        popularity: 40,
+        status: 'unknown',
+      });
+      setDone(true);
+      toast.success('ส่งข้อมูลเรียบร้อย!', 'ทีมผู้ดูแลจะตรวจสอบและอนุมัติเร็ว ๆ นี้');
+    } catch {
+      toast.error('ส่งข้อมูลไม่สำเร็จ', 'กรุณาลองใหม่อีกครั้ง');
+    } finally {
+      setSubmitting(false);
+    }
+  };
+
+  if (done) {
+    return (
+      <GlassCard padding="lg" className="mx-auto max-w-lg text-center">
+        <span className="mx-auto grid h-16 w-16 place-items-center rounded-3xl bg-emerald-500/12 text-emerald-500">
+          <CheckCircle2 className="h-8 w-8" />
+        </span>
+        <h2 className="mt-5 text-xl font-extrabold">ส่งเว็บไซต์สำเร็จ 🎉</h2>
+        <p className="mt-2 text-sm leading-relaxed text-muted">
+          ขอบคุณที่ร่วมสร้างไดเรกทอรีให้สมบูรณ์ยิ่งขึ้น
+          รายการของคุณอยู่ในสถานะ <Badge tone="warning">รอตรวจสอบ</Badge>{' '}
+          และจะปรากฏบนหน้าเว็บทันทีที่ผู้ดูแลอนุมัติ
+        </p>
+        <div className="mt-6 flex justify-center gap-3">
+          <Button
+            variant="secondary"
+            onClick={() => {
+              setForm(INITIAL);
+              setDone(false);
+              setAutoFilled(false);
+            }}
+          >
+            ส่งเว็บไซต์อื่นอีก
+          </Button>
+        </div>
+      </GlassCard>
+    );
+  }
+
+  return (
+    <form onSubmit={handleSubmit} className="mx-auto max-w-3xl space-y-5">
+      {/* Step 1 — URL + auto fetch */}
+      <GlassCard padding="lg">
+        <div className="flex items-center gap-2.5">
+          <span className="grid h-9 w-9 place-items-center rounded-xl bg-brand-gradient text-white shadow-glow">
+            <Link2 className="h-4.5 w-4.5" />
+          </span>
+          <div>
+            <h3 className="text-base font-bold">1. ใส่ลิงก์เว็บไซต์</h3>
+            <p className="text-xs text-muted">
+              ระบบจะดึงชื่อ คำอธิบาย ภาพปก และ favicon ให้อัตโนมัติ
+            </p>
+          </div>
+        </div>
+
+        <div className="mt-4 flex flex-col gap-2.5 sm:flex-row">
+          <input
+            value={form.url}
+            onChange={(e) => set('url', e.target.value)}
+            placeholder="https://example.com"
+            inputMode="url"
+            className="h-12 flex-1 rounded-xl bg-slate-500/10 px-4 text-sm outline-none ring-1 ring-inset ring-transparent transition placeholder:text-muted focus:ring-brand-500"
+          />
+          <Button
+            type="button"
+            onClick={handleAutoFetch}
+            loading={fetching}
+            leftIcon={!fetching ? <Wand2 className="h-4 w-4" /> : undefined}
+            className="h-12 sm:w-52"
+          >
+            {fetching ? 'กำลังดึงข้อมูล…' : 'ดึงข้อมูลอัตโนมัติ'}
+          </Button>
+        </div>
+
+        {autoFilled && (
+          <div className="mt-4 flex items-center gap-3 rounded-xl bg-emerald-500/10 p-3 animate-fade-in">
+            {form.faviconUrl && (
+              <img
+                src={form.faviconUrl}
+                alt=""
+                className="h-9 w-9 rounded-lg bg-white object-contain p-1 ring-1 ring-black/5"
+              />
+            )}
+            <span className="text-xs font-semibold text-emerald-600 dark:text-emerald-400">
+              เติมข้อมูลอัตโนมัติเรียบร้อย — ตรวจสอบและแก้ไขได้ตามต้องการ
+            </span>
+          </div>
+        )}
+
+        {form.coverImage && (
+          <div className="mt-3 overflow-hidden rounded-xl ring-1 ring-black/5">
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
+              src={form.coverImage}
+              alt="ภาพปกที่ดึงมา"
+              className="h-40 w-full object-cover"
+              loading="lazy"
+            />
+          </div>
+        )}
+      </GlassCard>
+
+      {/* Step 2 — Details */}
+      <GlassCard padding="lg" className="space-y-4">
+        <div className="flex items-center gap-2.5">
+          <span className="grid h-9 w-9 place-items-center rounded-xl bg-gradient-to-br from-violet-500 to-fuchsia-600 text-white shadow-md">
+            <Globe className="h-4.5 w-4.5" />
+          </span>
+          <div>
+            <h3 className="text-base font-bold">2. รายละเอียดเว็บไซต์</h3>
+            <p className="text-xs text-muted">ข้อมูลที่จะแสดงบนการ์ดและหน้ารายละเอียด</p>
+          </div>
+        </div>
+
+        <div className="grid gap-4 sm:grid-cols-2">
+          <Field label="ชื่อเว็บไซต์ *">
+            <input
+              value={form.name}
+              onChange={(e) => set('name', e.target.value)}
+              maxLength={60}
+              placeholder="เช่น Figma"
+              className={inputCls}
+            />
+          </Field>
+
+          <Field label="ผู้เสนอ (ไม่บังคับ)">
+            <input
+              value={form.submittedBy}
+              onChange={(e) => set('submittedBy', e.target.value)}
+              maxLength={40}
+              placeholder="ชื่อหรืออีเมลของคุณ"
+              className={inputCls}
+            />
+          </Field>
+        </div>
+
+        <Field label="คำอธิบาย (อังกฤษ) *">
+          <textarea
+            value={form.description}
+            onChange={(e) => set('description', e.target.value)}
+            rows={3}
+            maxLength={400}
+            placeholder="Short English description of what this site does…"
+            className={cn(inputCls, 'h-auto resize-none p-4 leading-relaxed')}
+          />
+        </Field>
+
+        <Field label="คำอธิบาย (ไทย)">
+          <textarea
+            value={form.descriptionTh}
+            onChange={(e) => set('descriptionTh', e.target.value)}
+            rows={3}
+            maxLength={400}
+            placeholder="อธิบายสั้น ๆ ว่าเว็บนี้ทำอะไร เหมาะกับใคร…"
+            className={cn(inputCls, 'h-auto resize-none p-4 leading-relaxed')}
+          />
+        </Field>
+
+        <div className="grid gap-4 sm:grid-cols-2">
+          <Field label="หมวดหมู่หลัก *">
+            <select
+              value={form.categoryId}
+              onChange={(e) => {
+                const cat = CATEGORY_MAP[e.target.value];
+                set('categoryId', e.target.value);
+                set('subcategoryId', cat.subcategories[0].id);
+              }}
+              className={cn(inputCls, 'cursor-pointer')}
+            >
+              {CATEGORIES.map((c) => (
+                <option key={c.id} value={c.id}>
+                  {c.nameTh} · {c.name}
+                </option>
+              ))}
+            </select>
+          </Field>
+
+          <Field label="หมวดหมู่ย่อย">
+            <select
+              value={form.subcategoryId}
+              onChange={(e) => set('subcategoryId', e.target.value)}
+              className={cn(inputCls, 'cursor-pointer')}
+            >
+              {subcategories.map((s) => (
+                <option key={s.id} value={s.id}>
+                  {s.nameTh} · {s.name}
+                </option>
+              ))}
+            </select>
+          </Field>
+        </div>
+
+        <Field label="แท็ก (คั่นด้วยเครื่องหมายจุลภาค)">
+          <input
+            value={form.tags}
+            onChange={(e) => set('tags', e.target.value)}
+            placeholder="design, ui, prototype, collaboration"
+            className={inputCls}
+          />
+        </Field>
+
+        <Field label="รูปแบบราคา">
+          <div className="flex flex-wrap gap-2">
+            {(Object.keys(PRICING_META) as PricingType[]).map((p) => (
+              <button
+                key={p}
+                type="button"
+                onClick={() => set('pricing', p)}
+                className={cn(
+                  'rounded-xl px-4 py-2 text-xs font-bold transition',
+                  form.pricing === p
+                    ? 'bg-brand-gradient text-white shadow-glow'
+                    : PRICING_META[p].className
+                )}
+              >
+                {PRICING_META[p].labelTh}
+              </button>
+            ))}
+          </div>
+        </Field>
+      </GlassCard>
+
+      <div className="flex flex-col gap-3 sm:flex-row sm:justify-end">
+        <Button
+          type="button"
+          variant="ghost"
+          onClick={() => {
+            setForm(INITIAL);
+            setAutoFilled(false);
+          }}
+        >
+          ล้างฟอร์ม
+        </Button>
+        <Button
+          type="submit"
+          size="lg"
+          loading={submitting}
+          leftIcon={!submitting ? <Sparkles className="h-4 w-4" /> : undefined}
+          className="sm:w-56"
+        >
+          ส่งเว็บไซต์เข้าระบบ
+        </Button>
+      </div>
+    </form>
+  );
+}
+
+const inputCls =
+  'h-12 w-full rounded-xl bg-slate-500/10 px-4 text-sm outline-none ring-1 ring-inset ring-transparent transition placeholder:text-muted focus:ring-brand-500';
+
+function Field({
+  label,
+  children,
+}: {
+  label: string;
+  children: React.ReactNode;
+}) {
+  return (
+    <label className="block">
+      <span className="mb-1.5 block text-xs font-bold uppercase tracking-wider text-muted">
+        {label}
+      </span>
+      {children}
+    </label>
+  );
+}
+
+/* keep icon import used */
+void Loader2;
+                'use client';
+
+import { useMemo, useState } from 'react';
+import {
+  CheckCircle2,
+  Database,
+  Download,
+  ExternalLink,
+  Lock,
+  Pencil,
+  RotateCcw,
+  Search,
+  Star,
+  Trash2,
+  Upload,
+  XCircle,
+} from 'lucide-react';
+import { useDirectory } from '@/context/DirectoryProvider';
+import { GlassCard } from '@/components/ui/GlassCard';
+import { Button } from '@/components/ui/Button';
+import { Badge } from '@/components/ui/Badge';
+import { Modal } from '@/components/ui/Modal';
+import { toast } from '@/components/ui/Toaster';
+import { StatusChecker } from './StatusChecker';
+import { SiteEditorModal } from './SiteEditorModal';
+import { CATEGORY_MAP } from '@/data/categories';
+import { exportAll, importAll, STORAGE_KEYS, readStorage, writeStorage } from '@/lib/storage';
+import { cn, formatNumber, PRICING_META, STATUS_META, timeAgo } from '@/lib/utils';
+import type { ApprovalStatus, WebSite } from '@/types';
+
+const PASSCODE = process.env.NEXT_PUBLIC_ADMIN_PASSCODE ?? 'admin1234';
+
+/* ------------------------------------------------------------------ *
+ *  Gate
+ * ------------------------------------------------------------------ */
+
+function AdminGate({ onUnlock }: { onUnlock: () => void }) {
+  const [code, setCode] = useState('');
+  const [error, setError] = useState(false);
+
+  const submit = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (code === PASSCODE) {
+      writeStorage(STORAGE_KEYS.adminSession, {
+        at: new Date().toISOString(),
+      });
+      toast.success('เข้าสู่ระบบผู้ดูแลสำเร็จ');
+      onUnlock();
+    } else {
+      setError(true);
+      toast.error('รหัสผ่านไม่ถูกต้อง');
+      setTimeout(() => setError(false), 1600);
+    }
+  };
+
+  return (
+    <div className="flex min-h-[60vh] items-center justify-center">
+      <GlassCard padding="lg" className="w-full max-w-sm text-center">
+        <span className="mx-auto grid h-14 w-14 place-items-center rounded-2xl bg-brand-gradient text-white shadow-glow">
+          <Lock className="h-6 w-6" />
+        </span>
+        <h2 className="mt-5 text-xl font-extrabold">Admin Portal</h2>
+        <p className="mt-1.5 text-xs text-muted">
+          กรุณากรอกรหัสผ่านเพื่อเข้าสู่แผงควบคุมผู้ดูแลระบบ
+        </p>
+
+        <form onSubmit={submit} className="mt-6 space-y-3">
+          <input
+            type="password"
+            value={code}
+            onChange={(e) => setCode(e.target.value)}
+            placeholder="••••••••"
+            autoFocus
+            className={cn(
+              'h-12 w-full rounded-xl bg-slate-500/10 px-4 text-center text-sm tracking-[0.3em] outline-none ring-1 ring-inset transition',
+              error
+                ? 'ring-rose-500 animate-pulse'
+                : 'ring-transparent focus:ring-brand-500'
+            )}
+          />
+          <Button type="submit" fullWidth size="md">
+            ปลดล็อก
+          </Button>
+        </form>
+
+        <p className="mt-4 text-[11px] leading-relaxed text-muted">
+          * Demo mode ใช้รหัสจาก <code className="font-mono">NEXT_PUBLIC_ADMIN_PASSCODE</code>{' '}
+          — สำหรับ production ให้เปลี่ยนไปใช้ Supabase Auth + Row Level Security
+        </p>
+      </GlassCard>
+    </div>
+  );
+}
+
+/* ------------------------------------------------------------------ *
+ *  Panel
+ * ------------------------------------------------------------------ */
+
+type Tab = 'all' | 'pending' | 'approved' | 'rejected';
+
+export function AdminPanel() {
+  const {
+    sites,
+    updateSite,
+    deleteSite,
+    setApproval,
+    resetAll,
+    refresh,
+    source,
+    reviews,
+  } = useDirectory();
+
+  const [unlocked, setUnlocked] = useState<boolean>(
+    () => Boolean(readStorage(STORAGE_KEYS.adminSession, null))
+  );
+  const [tab, setTab] = useState<Tab>('all');
+  const [query, setQuery] = useState('');
+  const [editing, setEditing] = useState<WebSite | null>(null);
+  const [confirmDelete, setConfirmDelete] = useState<WebSite | null>(null);
+  const [importOpen, setImportOpen] = useState(false);
+  const [importText, setImportText] = useState('');
+
+  const counts = useMemo(
+    () => ({
+      all: sites.length,
+      pending: sites.filter((s) => s.approvalStatus === 'pending').length,
+      approved: sites.filter((s) => s.approvalStatus === 'approved').length,
+      rejected: sites.filter((s) => s.approvalStatus === 'rejected').length,
+    }),
+    [sites]
+  );
+
+  const rows = useMemo(() => {
+    const q = query.trim().toLowerCase();
+    return sites
+      .filter((s) => (tab === 'all' ? true : s.approvalStatus === tab))
+      .filter(
+        (s) =>
+          !q ||
+          s.name.toLowerCase().includes(q) ||
+          s.domain.includes(q) ||
+          s.tags.some((t) => t.includes(q))
+      )
+      .sort((a, b) => +new Date(b.updatedAt) - +new Date(a.updatedAt));
+  }, [sites, tab, query]);
+
+  if (!unlocked) return <AdminGate onUnlock={() => setUnlocked(true)} />;
+
+  const handleApproval = async (site: WebSite, status: ApprovalStatus) => {
+    await setApproval(site.id, status);
+    toast.success(
+      status === 'approved'
+        ? 'อนุมัติเรียบร้อย'
+        : status === 'rejected'
+          ? 'ปฏิเสธรายการแล้ว'
+          : 'เปลี่ยนสถานะแล้ว',
+      site.name
+    );
+  };
+
+  const handleExport = () => {
+    const blob = new Blob([exportAll()], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `webhub-backup-${new Date().toISOString().slice(0, 10)}.json`;
+    a.click();
+    URL.revokeObjectURL(url);
+    toast.success('ส่งออกข้อมูลเรียบร้อย');
+  };
+
+  const handleImport = async () => {
+    if (importAll(importText)) {
+      await refresh();
+      setImportOpen(false);
+      setImportText('');
+      toast.success('นำเข้าข้อมูลสำเร็จ');
+    } else {
+      toast.error('ไฟล์ไม่ถูกต้อง', 'กรุณาตรวจสอบรูปแบบ JSON อีกครั้ง');
+    }
+  };
+
+  return (
+    <div className="space-y-6">
+      {/* Header */}
+      <GlassCard padding="lg">
+        <div className="flex flex-wrap items-center gap-4">
+          <div className="min-w-0 flex-1">
+            <h1 className="text-2xl font-extrabold tracking-tight">
+              Admin Dashboard
+            </h1>
+            <p className="mt-1 text-sm text-muted">
+              จัดการเว็บไซต์ อนุมัติรายการที่ผู้ใช้เสนอ และดูแลคุณภาพลิงก์ทั้งระบบ
+            </p>
+          </div>
+
+          <div className="flex flex-wrap gap-2">
+            <Button
+              variant="secondary"
+              size="sm"
+              leftIcon={<Download className="h-4 w-4" />}
+              onClick={handleExport}
+            >
+              ส่งออก JSON
+            </Button>
+            <Button
+              variant="secondary"
+              size="sm"
+              leftIcon={<Upload className="h-4 w-4" />}
+              onClick={() => setImportOpen(true)}
+            >
+              นำเข้า
+            </Button>
+            <Button
+              variant="outline"
+              size="sm"
+              leftIcon={<RotateCcw className="h-4 w-4" />}
+              onClick={async () => {
+                if (
+                  window.confirm(
+                    'ต้องการรีเซ็ตข้อมูลทั้งหมดกลับเป็นค่าเริ่มต้นหรือไม่? การกระทำนี้ย้อนกลับไม่ได้'
+                  )
+                ) {
+                  await resetAll();
+                  toast.success('รีเซ็ตข้อมูลเรียบร้อย');
+                }
+              }}
+            >
+              รีเซ็ต
+            </Button>
+          </div>
+        </div>
+
+        <div className="mt-5 grid grid-cols-2 gap-3 sm:grid-cols-5">
+          {[
+            { label: 'เว็บทั้งหมด', value: counts.all, tone: 'from-brand-500 to-brand-700' },
+            { label: 'รอตรวจสอบ', value: counts.pending, tone: 'from-amber-500 to-orange-600' },
+            { label: 'อนุมัติแล้ว', value: counts.approved, tone: 'from-emerald-500 to-teal-600' },
+            { label: 'ปฏิเสธ', value: counts.rejected, tone: 'from-rose-500 to-pink-600' },
+            { label: 'รีวิวทั้งหมด', value: reviews.length, tone: 'from-violet-500 to-fuchsia-600' },
+          ].map((s) => (
+            <div key={s.label} className="rounded-2xl bg-slate-500/[0.07] p-4">
+              <p
+                className={cn(
+                  'bg-gradient-to-br bg-clip-text text-2xl font-black tabular-nums text-transparent',
+                  s.tone
+                )}
+              >
+                {formatNumber(s.value)}
+              </p>
+              <p className="mt-0.5 text-[11px] font-medium text-muted">{s.label}</p>
+            </div>
+          ))}
+        </div>
+
+        <div className="mt-4 flex items-center gap-2 text-[11px] text-muted">
+          <Database className="h-3.5 w-3.5" />
+          Data source ปัจจุบัน:{' '}
+          <Badge tone={source === 'supabase' ? 'success' : 'info'}>{source}</Badge>
+        </div>
+      </GlassCard>
+
+      {/* Status checker */}
+      <StatusChecker />
+
+      {/* Table */}
+      <GlassCard padding="lg" className="space-y-4">
+        <div className="flex flex-wrap items-center gap-3">
+          <div className="flex flex-wrap gap-1.5">
+            {([
+              { key: 'all' as const, label: 'ทั้งหมด' },
+              { key: 'pending' as const, label: 'รอตรวจสอบ' },
+              { key: 'approved' as const, label: 'อนุมัติแล้ว' },
+              { key: 'rejected' as const, label: 'ปฏิเสธ' },
+            ]).map(({ key, label }) => (
+              <button
+                key={key}
+                onClick={() => setTab(key)}
+                className={cn(
+                  'rounded-xl px-3.5 py-2 text-xs font-bold transition',
+                  tab === key
+                    ? 'bg-brand-gradient text-white shadow-glow'
+                    : 'bg-slate-500/10 text-muted hover:bg-slate-500/20'
+                )}
+              >
+                {label}
+                <span className="ml-1.5 opacity-70">{counts[key]}</span>
+              </button>
+            ))}
+          </div>
+
+          <div className="ml-auto flex h-10 min-w-[220px] items-center gap-2 rounded-xl bg-slate-500/10 px-3">
+            <Search className="h-4 w-4 shrink-0 text-muted" />
+            <input
+              value={query}
+              onChange={(e) => setQuery(e.target.value)}
+              placeholder="ค้นหาในตาราง…"
+              className="w-full bg-transparent text-sm outline-none placeholder:text-muted"
+            />
+          </div>
+        </div>
+
+        <div className="-mx-2 overflow-x-auto">
+          <table className="w-full min-w-[880px] border-collapse text-sm">
+            <thead>
+              <tr className="border-b border-[rgb(var(--border))] text-left text-[11px] uppercase tracking-wider text-muted">
+                <th className="px-2 py-3 font-bold">เว็บไซต์</th>
+                <th className="px-2 py-3 font-bold">หมวดหมู่</th>
+                <th className="px-2 py-3 font-bold">ราคา</th>
+                <th className="px-2 py-3 font-bold">คะแนน</th>
+                <th className="px-2 py-3 font-bold">ลิงก์</th>
+                <th className="px-2 py-3 font-bold">สถานะ</th>
+                <th className="px-2 py-3 text-right font-bold">จัดการ</th>
+              </tr>
+            </thead>
+            <tbody>
+              {rows.map((s) => (
+                <tr
+                  key={s.id}
+                  className="border-b border-[rgb(var(--border))] transition hover:bg-slate-500/[0.05]"
+                >
+                  <td className="px-2 py-3">
+                    <div className="flex items-center gap-3">
+                      <img
+                        src={s.faviconUrl}
+                        alt=""
+                        className="h-8 w-8 shrink-0 rounded-lg bg-white object-contain p-1 ring-1 ring-black/5"
+                        loading="lazy"
+                      />
+                      <div className="min-w-0">
+                        <p className="flex items-center gap-1.5 truncate font-bold">
+                          {s.name}
+                          {s.featured && (
+                            <Star className="h-3.5 w-3.5 text-amber-400" fill="currentColor" />
+                          )}
+                        </p>
+                        <p className="truncate text-[11px] text-muted">
+                          {s.domain} · {timeAgo(s.updatedAt)}
+                        </p>
+                      </div>
+                    </div>
+                  </td>
+
+                  <td className="px-2 py-3">
+                    <span className="text-xs font-semibold">
+                      {CATEGORY_MAP[s.categoryId]?.nameTh ?? s.categoryId}
+                    </span>
+                  </td>
+
+                  <td className="px-2 py-3">
+                    <span
+                      className={cn(
+                        'rounded-full px-2 py-0.5 text-[10px] font-bold',
+                        PRICING_META[s.pricing].className
+                      )}
+                    >
+                      {PRICING_META[s.pricing].labelTh}
+                    </span>
+                  </td>
+
+                  <td className="px-2 py-3 tabular-nums">
+                    <span className="text-xs font-bold">{s.rating.toFixed(1)}</span>
+                    <span className="ml-1 text-[10px] text-muted">
+                      ({formatNumber(s.reviewCount)})
+                    </span>
+                  </td>
+
+                  <td className="px-2 py-3">
+                    <span className="inline-flex items-center gap-1.5 text-[11px] font-semibold">
+                      <span className={cn('h-1.5 w-1.5 rounded-full', STATUS_META[s.status].dot)} />
+                      {STATUS_META[s.status].label}
+                    </span>
+                  </td>
+
+                  <td className="px-2 py-3">
+                    <Badge
+                      tone={
+                        s.approvalStatus === 'approved'
+                          ? 'success'
+                          : s.approvalStatus === 'pending'
+                            ? 'warning'
+                            : 'danger'
+                      }
+                    >
+                      {s.approvalStatus === 'approved'
+                        ? 'อนุมัติ'
+                        : s.approvalStatus === 'pending'
+                          ? 'รอตรวจ'
+                          : 'ปฏิเสธ'}
+                    </Badge>
+                  </td>
+
+                  <td className="px-2 py-3">
+                    <div className="flex items-center justify-end gap-1">
+                      {s.approvalStatus !== 'approved' && (
+                        <button
+                          onClick={() => handleApproval(s, 'approved')}
+                          aria-label="อนุมัติ"
+                          title="อนุมัติ"
+                          className="grid h-8 w-8 place-items-center rounded-lg text-emerald-500 transition hover:bg-emerald-500/10"
+                        >
+                          <CheckCircle2 className="h-4 w-4" />
+                        </button>
+                      )}
+                      {s.approvalStatus !== 'rejected' && (
+                        <button
+                          onClick={() => handleApproval(s, 'rejected')}
+                          aria-label="ปฏิเสธ"
+                          title="ปฏิเสธ"
+                          className="grid h-8 w-8 place-items-center rounded-lg text-amber-500 transition hover:bg-amber-500/10"
+                        >
+                          <XCircle className="h-4 w-4" />
+                        </button>
+                      )}
+                      <a
+                        href={s.url}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        aria-label="เปิดเว็บไซต์"
+                        title="เปิดเว็บไซต์"
+                        className="grid h-8 w-8 place-items-center rounded-lg text-muted transition hover:bg-slate-500/10"
+                      >
+                        <ExternalLink className="h-4 w-4" />
+                      </a>
+                      <button
+                        onClick={() => setEditing(s)}
+                        aria-label="แก้ไข"
+                        title="แก้ไข"
+                        className="grid h-8 w-8 place-items-center rounded-lg text-sky-500 transition hover:bg-sky-500/10"
+                      >
+                        <Pencil className="h-4 w-4" />
+                      </button>
+                      <button
+                        onClick={() => setConfirmDelete(s)}
+                        aria-label="ลบ"
+                        title="ลบ"
+                        className="grid h-8 w-8 place-items-center rounded-lg text-rose-500 transition hover:bg-rose-500/10"
+                      >
+                        <Trash2 className="h-4 w-4" />
+                      </button>
+                    </div>
+                  </td>
+                </tr>
+              ))}
+
+              {rows.length === 0 && (
+                <tr>
+                  <td colSpan={7} className="py-14 text-center text-sm text-muted">
+                    ไม่พบรายการที่ตรงกับเงื่อนไข
+                  </td>
+                </tr>
+              )}
+            </tbody>
+          </table>
+        </div>
+      </GlassCard>
+
+      {/* Editor */}
+      <SiteEditorModal
+        site={editing}
+        open={Boolean(editing)}
+        onClose={() => setEditing(null)}
+        onSave={updateSite}
+      />
+
+      {/* Delete confirm */}
+      <Modal
+        open={Boolean(confirmDelete)}
+        onClose={() => setConfirmDelete(null)}
+        size="sm"
+        title="ยืนยันการลบ"
+        description={confirmDelete?.name}
+        footer={
+          <div className="flex justify-end gap-3">
+            <Button variant="ghost" onClick={() => setConfirmDelete(null)}>
+              ยกเลิก
+            </Button>
+            <Button
+              variant="danger"
+              onClick={async () => {
+                if (!confirmDelete) return;
+                await deleteSite(confirmDelete.id);
+                toast.success('ลบรายการแล้ว', confirmDelete.name);
+                setConfirmDelete(null);
+              }}
+            >
+              ลบถาวร
+            </Button>
+          </div>
+        }
+      >
+        <p className="text-sm leading-relaxed text-muted">
+          การลบจะนำเว็บไซต์นี้และรีวิวทั้งหมดออกจากระบบอย่างถาวร
+          และไม่สามารถกู้คืนได้ ยืนยันหรือไม่?
+        </p>
+      </Modal>
+
+      {/* Import */}
+      <Modal
+        open={importOpen}
+        onClose={() => setImportOpen(false)}
+        size="md"
+        title="นำเข้าข้อมูลจากไฟล์สำรอง"
+        description="วางเนื้อหา JSON ที่ได้จากการส่งออกไว้ด้านล่าง"
+        footer={
+          <div className="flex justify-end gap-3">
+            <Button variant="ghost" onClick={() => setImportOpen(false)}>
+              ยกเลิก
+            </Button>
+            <Button onClick={handleImport}>นำเข้า</Button>
+          </div>
+        }
+      >
+        <textarea
+          value={importText}
+          onChange={(e) => setImportText(e.target.value)}
+          rows={12}
+          placeholder='{"exportedAt":"…","data":{…}}'
+          className="w-full resize-none rounded-xl bg-slate-500/10 p-4 font-mono text-xs outline-none ring-1 ring-inset ring-transparent focus:ring-brand-500"
+        />
+      </Modal>
+    </div>
+  );
+}
+                import { NextResponse } from 'next/server';
+import type { ApiResponse, LinkStatus, StatusCheckResult } from '@/types';
+
+export const runtime = 'nodejs';
+export const dynamic = 'force-dynamic';
+
+const TIMEOUT_MS = 10_000;
+const UA = 'Mozilla/5.0 (compatible; WebHubStatusBot/1.0)';
+
+function classify(code: number): LinkStatus {
+  if (code >= 200 && code < 300) return 'up';
+  if (code >= 300 && code < 400) return 'redirect';
+  if (code === 401 || code === 403 || code === 405 || code === 429) return 'up'; // reachable but guarded
+  return 'down';
+}
+
+async function probe(
+  url: string,
+  method: 'HEAD' | 'GET'
+): Promise<{ code: number; finalUrl: string }> {
+  const controller = new AbortController();
+  const timer = setTimeout(() => controller.abort(), TIMEOUT_MS);
+  try {
+    const res = await fetch(url, {
+      method,
+      redirect: 'follow',
+      signal: controller.signal,
+      headers: { 'User-Agent': UA, Accept: '*/*' },
+      cache: 'no-store',
+    });
+    return { code: res.status, finalUrl: res.url || url };
+  } finally {
+    clearTimeout(timer);
+  }
+}
+
+export async function GET(request: Request) {
+  const { searchParams } = new URL(request.url);
+  const raw = searchParams.get('url');
+  const started = Date.now();
+
+  if (!raw) {
+    return NextResponse.json<ApiResponse<never>>(
+      { ok: false, error: 'missing "url" query parameter' },
+      { status: 400 }
+    );
+  }
+
+  let target: string;
+  try {
+    target = new URL(raw.startsWith('http') ? raw : `https://${raw}`).toString();
+  } catch {
+    return NextResponse.json<ApiResponse<never>>(
+      { ok: false, error: 'invalid url' },
+      { status: 400 }
+    );
+  }
+
+  try {
+    let result = await probe(target, 'HEAD');
+
+    // Some servers reject HEAD — retry with GET
+    if (result.code >= 400 && result.code !== 429) {
+      try {
+        result = await probe(target, 'GET');
+      } catch {
+        /* keep HEAD result */
+      }
+    }
+
+    const data: StatusCheckResult = {
+      url: target,
+      status: classify(result.code),
+      httpCode: result.code,
+      responseTimeMs: Date.now() - started,
+      checkedAt: new Date().toISOString(),
+    };
+
+    return NextResponse.json<ApiResponse<StatusCheckResult>>({ ok: true, data });
+  } catch (err) {
+    const data: StatusCheckResult = {
+      url: target,
+      status: 'down',
+      httpCode: null,
+      responseTimeMs: Date.now() - started,
+      checkedAt: new Date().toISOString(),
+      error:
+        err instanceof Error
+          ? err.name === 'AbortError'
+            ? 'timeout'
+            : err.message
+          : 'unknown error',
+    };
+    return NextResponse.json<ApiResponse<StatusCheckResult>>({ ok: true, data });
+  }
+}
+
+/** Batch check — POST { urls: string[] } */
+export async function POST(request: Request) {
+  try {
+    const body = (await request.json()) as { urls?: string[] };
+    const urls = (body.urls ?? []).slice(0, 40);
+
+    const results = await Promise.all(
+      urls.map(async (u): Promise<StatusCheckResult> => {
+        const started = Date.now();
+        try {
+          const target = new URL(u.startsWith('http') ? u : `https://${u}`).toString();
+          const r = await probe(target, 'HEAD');
+          return {
+            url: target,
+            status: classify(r.code),
+            httpCode: r.code,
+            responseTimeMs: Date.now() - started,
+            checkedAt: new Date().toISOString(),
+          };
+        } catch {
+          return {
+            url: u,
+            status: 'down',
+            httpCode: null,
+            responseTimeMs: Date.now() - started,
+            checkedAt: new Date().toISOString(),
+            error: 'unreachable',
+          };
+        }
+      })
+    );
+
+    return NextResponse.json<ApiResponse<StatusCheckResult[]>>({
+      ok: true,
+      data: results,
+    });
+  } catch {
+    return NextResponse.json<ApiResponse<never>>(
+      { ok: false, error: 'invalid body' },
+      { status: 400 }
+    );
+  }
+}
+                'use client';
+
+import Link from 'next/link';
+import { Compass, Home } from 'lucide-react';
+import { GlassCard } from '@/components/ui/GlassCard';
+
+export default function NotFound() {
+  return (
+    <div className="flex min-h-[70vh] items-center justify-center">
+      <GlassCard padding="lg" className="max-w-md text-center">
+        <span className="mx-auto grid h-16 w-16 place-items-center rounded-3xl bg-brand-gradient text-white shadow-glow">
+          <Compass className="h-8 w-8" />
+        </span>
+        <h1 className="mt-6 text-6xl font-black gradient-text">404</h1>
+        <h2 className="mt-2 text-xl font-extrabold">ไม่พบหน้าที่คุณกำลังมองหา</h2>
+        <p className="mt-2 text-sm leading-relaxed text-muted">
+          หน้านี้อาจถูกย้าย ลบออก หรือคุณพิมพ์ที่อยู่ผิด
+          ลองกลับไปหน้าแรกแล้วค้นหาใหม่อีกครั้ง
+        </p>
+        <Link
+          href="/"
+          className="mt-6 inline-flex h-12 items-center justify-center gap-2 rounded-2xl bg-brand-gradient px-7 font-semibold text-white shadow-glow transition hover:brightness-110"
+        >
+          <Home className="h-4 w-4" /> กลับสู่หน้าแรก
+        </Link>
+      </GlassCard>
+    </div>
+  );
+}
+                #!/usr/bin/env node
+/**
+ * Automated Link Status Checker (CI / cron friendly)
+ * -------------------------------------------------
+ * Usage:
+ *   node scripts/check-links.mjs
+ *   node scripts/check-links.mjs --concurrency=8 --timeout=8000 --fail-on-broken
+ *
+ * Output:  reports/link-status.json  +  console summary table
+ * Exit:    1 if --fail-on-broken and at least one link is down
+ */
+
+import { readFile, writeFile, mkdir } from 'node:fs/promises';
+import { dirname, resolve } from 'node:path';
+import { fileURLToPath } from 'node:url';
+
+const __dirname = dirname(fileURLToPath(import.meta.url));
+const ROOT = resolve(__dirname, '..');
+const DATA_FILE = resolve(ROOT, 'src/data/sites.raw.json');
+const OUT_DIR = resolve(ROOT, 'reports');
+const OUT_FILE = resolve(OUT_DIR, 'link-status.json');
+
+const UA = 'Mozilla/5.0 (compatible; WebHubStatusBot/1.0; +https://webhub.example/bot)';
+
+/* ------------------------------ args ------------------------------ */
+
+const args = Object.fromEntries(
+  process.argv.slice(2).map((a) => {
+    const [k, v] = a.replace(/^--/, '').split('=');
+    return [k, v ?? true];
+  })
+);
+
+const CONCURRENCY = Number(args.concurrency ?? 6);
+const TIMEOUT = Number(args.timeout ?? 10_000);
+const FAIL_ON_BROKEN = Boolean(args['fail-on-broken']);
+
+/* ----------------------------- helpers ---------------------------- */
+
+const COLORS = {
+  reset: '\x1b[0m',
+  green: '\x1b[32m',
+  red: '\x1b[31m',
+  yellow: '\x1b[33m',
+  cyan: '\x1b[36m',
+  dim: '\x1b[2m',
+  bold: '\x1b[1m',
+};
+
+function classify(code) {
+  if (code >= 200 && code < 300) return 'up';
+  if (code >= 300 && code < 400) return 'redirect';
+  if ([401, 403, 405, 429].includes(code)) return 'up';
+  return 'down';
+}
+
+async function probe(url, method) {
+  const controller = new AbortController();
+  const timer = setTimeout(() => controller.abort(), TIMEOUT);
+  const started = Date.now();
+  try {
+    const res = await fetch(url, {
+      method,
+      redirect: 'follow',
+      signal: controller.signal,
+      headers: { 'User-Agent': UA, Accept: '*/*' },
+    });
+    return {
+      code: res.status,
+      finalUrl: res.url || url,
+      ms: Date.now() - started,
+    };
+  } finally {
+    clearTimeout(timer);
+  }
+}
+
+async function checkOne(site) {
+  const started = Date.now();
+  try {
+    let r = await probe(site.url, 'HEAD');
+    if (r.code >= 400 && r.code !== 429) {
+      try {
+        r = await probe(site.url, 'GET');
+      } catch {
+        /* keep HEAD result */
+      }
+    }
+    return {
+      name: site.name,
+      url: site.url,
+      finalUrl: r.finalUrl,
+      httpCode: r.code,
+      status: classify(r.code),
+      responseTimeMs: r.ms,
+      checkedAt: new Date().toISOString(),
+    };
+  } catch (err) {
+    return {
+      name: site.name,
+      url: site.url,
+      finalUrl: site.url,
+      httpCode: null,
+      status: 'down',
+      responseTimeMs: Date.now() - started,
+      checkedAt: new Date().toISOString(),
+      error: err?.name === 'AbortError' ? 'timeout' : String(err?.message ?? err),
+    };
+  }
+}
+
+async function pMap(items, fn, concurrency) {
+  const results = new Array(items.length);
+  let cursor = 0;
+  const workers = Array.from(
+    { length: Math.min(concurrency, items.length) },
+    async () => {
+      while (cursor < items.length) {
+        const i = cursor++;
+        results[i] = await fn(items[i], i);
+      }
+    }
+  );
+  await Promise.all(workers);
+  return results;
+}
+
+/* ------------------------------ main ------------------------------ */
+
+async function main() {
+  console.log(
+    `${COLORS.bold}${COLORS.cyan}\n🔍 WebHub — Automated Link Status Checker${COLORS.reset}\n`
+  );
+
+  const raw = JSON.parse(await readFile(DATA_FILE, 'utf-8'));
+  console.log(
+    `${COLORS.dim}เป้าหมาย: ${raw.length} เว็บไซต์ | concurrency=${CONCURRENCY} | timeout=${TIMEOUT}ms${COLORS.reset}\n`
+  );
+
+  let done = 0;
+  const results = await pMap(
+    raw,
+    async (site) => {
+      const r = await checkOne(site);
+      done += 1;
+
+      const icon =
+        r.status === 'up'
+          ? `${COLORS.green}✓${COLORS.reset}`
+          : r.status === 'redirect'
+            ? `${COLORS.yellow}↪${COLORS.reset}`
+            : `${COLORS.red}✗${COLORS.reset}`;
+
+      console.log(
+        `${icon} ${String(done).padStart(3)}/${raw.length}  ` +
+          `${r.name.padEnd(24).slice(0, 24)} ` +
+          `${COLORS.dim}${String(r.httpCode ?? 'ERR').padEnd(4)} ${r.responseTimeMs}ms${COLORS.reset}` +
+          (r.error ? ` ${COLORS.red}${r.error}${COLORS.reset}` : '')
+      );
+
+      return r;
+    },
+    CONCURRENCY
+  );
+
+  const summary = {
+    up: results.filter((r) => r.status === 'up').length,
+    redirect: results.filter((r) => r.status === 'redirect').length,
+    down: results.filter((r) => r.status === 'down').length,
+  };
+
+  const avgMs = Math.round(
+    results.reduce((s, r) => s + r.responseTimeMs, 0) / (results.length || 1)
+  );
+
+  await mkdir(OUT_DIR, { recursive: true });
+  await writeFile(
+    OUT_FILE,
+    JSON.stringify(
+      { checkedAt: new Date().toISOString(), summary, avgMs, results },
+      null,
+      2
+    ),
+    'utf-8'
+  );
+
+  console.log(`\n${COLORS.bold}────────── สรุปผล ──────────${COLORS.reset}`);
+  console.log(`${COLORS.green}✓ ใช้งานได้      : ${summary.up}${COLORS.reset}`);
+  console.log(`${COLORS.yellow}↪ เปลี่ยนเส้นทาง : ${summary.redirect}${COLORS.reset}`);
+  console.log(`${COLORS.red}✗ ลิงก์เสีย      : ${summary.down}${COLORS.reset}`
+                
