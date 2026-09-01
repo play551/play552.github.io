@@ -1,1 +1,193 @@
+# ---- Supabase (optional). ถ้าไม่ใส่ ระบบจะใช้ LocalStorage อัตโนมัติ ----
+NEXT_PUBLIC_SUPABASE_URL=
+NEXT_PUBLIC_SUPABASE_ANON_KEY=
 
+# ---- Data source: "local" | "supabase" | "auto" (default: auto) ----
+NEXT_PUBLIC_DATA_SOURCE=auto
+
+# ---- Admin gate (demo only — ใช้ Supabase Auth/RLS ใน production จริง) ----
+NEXT_PUBLIC_ADMIN_PASSCODE=admin1234
+
+# ---- Site meta ----
+NEXT_PUBLIC_SITE_URL=http://localhost:3000
+NEXT_PUBLIC_SITE_NAME=WebHub
+/* ------------------------------------------------------------------ *
+ *  Core domain types — All-in-One Web Directory & Resources Hub
+ * ------------------------------------------------------------------ */
+
+export type PricingType = 'free' | 'freemium' | 'paid' | 'trial';
+
+export type LinkStatus = 'up' | 'down' | 'redirect' | 'unknown' | 'checking';
+
+export type ApprovalStatus = 'pending' | 'approved' | 'rejected';
+
+export type SortKey =
+  | 'popularity'
+  | 'rating'
+  | 'newest'
+  | 'name-asc'
+  | 'name-desc'
+  | 'clicks';
+
+export type DataSource = 'local' | 'supabase';
+
+/* ---------------------------- Taxonomy ---------------------------- */
+
+export interface SubCategory {
+  id: string;
+  name: string;
+  nameTh: string;
+}
+
+export interface Category {
+  id: string;
+  name: string;
+  nameTh: string;
+  /** lucide-react icon name */
+  icon: string;
+  /** tailwind gradient classes */
+  gradient: string;
+  accent: string;
+  description: string;
+  subcategories: SubCategory[];
+}
+
+/* ------------------------------ Site ------------------------------ */
+
+export interface WebSite {
+  id: string;
+  slug: string;
+  name: string;
+  url: string;
+  domain: string;
+  description: string;
+  descriptionTh: string;
+  categoryId: string;
+  subcategoryId: string;
+  tags: string[];
+  pricing: PricingType;
+  /** 0 - 100 */
+  popularity: number;
+  /** 0 - 5 */
+  rating: number;
+  reviewCount: number;
+  faviconUrl: string;
+  coverImage: string | null;
+  featured: boolean;
+  verified: boolean;
+  status: LinkStatus;
+  httpCode: number | null;
+  lastCheckedAt: string | null;
+  clicks: number;
+  language: string;
+  approvalStatus: ApprovalStatus;
+  submittedBy: string | null;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export type WebSiteInput = Partial<WebSite> &
+  Pick<WebSite, 'name' | 'url' | 'description' | 'categoryId'>;
+
+export type WebSitePatch = Partial<Omit<WebSite, 'id' | 'createdAt'>>;
+
+/* ----------------------------- Review ----------------------------- */
+
+export interface Review {
+  id: string;
+  siteId: string;
+  author: string;
+  avatarSeed: string;
+  rating: number;
+  comment: string;
+  helpful: number;
+  createdAt: string;
+}
+
+export type ReviewInput = Omit<Review, 'id' | 'createdAt' | 'helpful' | 'avatarSeed'> &
+  Partial<Pick<Review, 'avatarSeed'>>;
+
+/* ---------------------------- Filtering --------------------------- */
+
+export interface FilterState {
+  query: string;
+  categoryId: string | null;
+  subcategoryId: string | null;
+  pricing: PricingType[];
+  minRating: number;
+  minPopularity: number;
+  tags: string[];
+  onlyFeatured: boolean;
+  onlyVerified: boolean;
+  onlyAlive: boolean;
+  sort: SortKey;
+}
+
+export const DEFAULT_FILTERS: FilterState = {
+  query: '',
+  categoryId: null,
+  subcategoryId: null,
+  pricing: [],
+  minRating: 0,
+  minPopularity: 0,
+  tags: [],
+  onlyFeatured: false,
+  onlyVerified: false,
+  onlyAlive: false,
+  sort: 'popularity',
+};
+
+/* --------------------------- Metadata API ------------------------- */
+
+export interface FetchedMetadata {
+  url: string;
+  finalUrl: string;
+  title: string;
+  description: string;
+  image: string | null;
+  favicon: string;
+  siteName: string;
+  themeColor: string | null;
+  keywords: string[];
+}
+
+export interface StatusCheckResult {
+  url: string;
+  status: LinkStatus;
+  httpCode: number | null;
+  responseTimeMs: number;
+  checkedAt: string;
+  error?: string;
+}
+
+/* ---------------------------- API shapes -------------------------- */
+
+export interface ApiSuccess<T> {
+  ok: true;
+  data: T;
+}
+
+export interface ApiFailure {
+  ok: false;
+  error: string;
+}
+
+export type ApiResponse<T> = ApiSuccess<T> | ApiFailure;
+
+/* ----------------------------- Toaster ---------------------------- */
+
+export type ToastKind = 'success' | 'error' | 'info' | 'warning';
+
+export interface ToastPayload {
+  id: string;
+  kind: ToastKind;
+  title: string;
+  message?: string; for 
+  duration?: number;
+}
+
+/* ------------------------------ Theme ----------------------------- */
+
+export type ThemeMode = 'light' | 'dark' | 'system';
+  
+  
